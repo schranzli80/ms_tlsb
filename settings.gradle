@@ -16,9 +16,9 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'gs_report_test'
+rootProject.name = 'ms_tlsb'
 
-include 'base_webservice', 'gs_mail', 'gs_report'
-project(':base_webservice').projectDir = new File(settingsDir, '../base_webservice')
-project(':gs_mail').projectDir = new File(settingsDir, '../gs_mail')
-project(':gs_report').projectDir = new File(settingsDir, '../gs_report')
+//include 'base_webservice', 'gs_mail', 'gs_report'
+//project(':base_webservice').projectDir = new File(settingsDir, '../base_webservice')
+//project(':gs_mail').projectDir = new File(settingsDir, '../gs_mail')
+//project(':gs_report').projectDir = new File(settingsDir, '../gs_report')

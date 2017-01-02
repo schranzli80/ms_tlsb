@@ -22,9 +22,9 @@ repositories {
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
-	compile project(':gs_mail')
-	compile project(':gs_report')
-	compile project(':base_webservice')
+	//compile project(':gs_mail')
+	//compile project(':gs_report')
+	//compile project(':base_webservice')
 	compile 'org.apache.commons:commons-dbcp2:2.1.1'
 	//compile 'org.postgresql:postgresql:9.4.1208.jre7'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'

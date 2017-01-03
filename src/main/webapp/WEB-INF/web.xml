@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  
+  <filter>
+     <filter-name>sessionFilter</filter-name>
+     <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+   </filter>
+  
+  <filter-mapping>
+		<filter-name>sessionFilter</filter-name>
+		<url-pattern>*.action</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+		<filter-name>sessionFilter</filter-name>
+		<url-pattern>/results/*</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+		<filter-name>sessionFilter</filter-name>
+		<url-pattern>/district/*</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+		<filter-name>sessionFilter</filter-name>
+		<url-pattern>/diszipline/*</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+		<filter-name>sessionFilter</filter-name>
+		<url-pattern>/round/*</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+		<filter-name>sessionFilter</filter-name>
+		<url-pattern>/shooter/*</url-pattern>
+  </filter-mapping>
+	
+  
+  <servlet>
+	<servlet-name>StripesDispatcher</servlet-name>
+		<servlet-class>
+			at.generalsolutions.servlet.CorsStripesServlet
+		</servlet-class>
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+ <filter>
+    <filter-name>StripesFilter</filter-name>
+    <filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
+    <init-param>
+        <param-name>ActionResolver.Packages</param-name>
+        <param-value>at.co.schranz.tlsb</param-value>
+    </init-param>
+    <init-param>
+        <param-name>Extension.Packages</param-name>
+        <param-value>at.co.schranz.tlsb</param-value>
+    </init-param>
+    <init-param>
+        <!-- this is that the @wired anotation can autoinject beans -->
+		<param-name>Interceptor.Classes</param-name>
+		<param-value>at.generalsolutions.stripes.StripesInterceptor, at.generalsolutions.security.SecurityInterceptor</param-value>
+	</init-param>
+	<init-param>
+    	<param-name>ExceptionHandler.Class</param-name>
+    	<param-value>at.generalsolutions.stripes.GSExceptionHandler</param-value>
+	</init-param>
+	<init-param>
+        <param-name>Configuration.Class</param-name>
+        <param-value>at.generalsolutions.utils.stripes.StripesRuntimeConfiguration</param-value>
+    </init-param>
+    <init-param>
+		<param-name>MultipartWrapper.Class</param-name> 
+		<param-value>net.sourceforge.stripes.controller.multipart.CommonsMultipartWrapper</param-value>
+	</init-param>
+	<init-param>
+		<param-name>FileUpload.MaximumPostSize</param-name>
+		<param-value>10m</param-value>
+	</init-param>
+</filter>
+  
+ 	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>*.action</url-pattern>
+	</servlet-mapping>
+	
+    <servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>/results/*</url-pattern>
+	</servlet-mapping>
+	
+	 <servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>/district/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>/diszipline/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>/round/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>/shooter/*</url-pattern>
+	</servlet-mapping>
+	
+ <filter-mapping>
+		<filter-name>StripesFilter</filter-name>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+</filter-mapping>
+  
+  
+ <!-- this is needed that the applicationContext.xml will be loaded -->
+  <listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+  </listener>
+  
+</web-app>

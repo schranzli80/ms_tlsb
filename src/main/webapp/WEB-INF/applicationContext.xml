@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:lang="http://www.springframework.org/schema/lang"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+    	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd">
+  
+  <context:component-scan base-package="at.generalsolutions,at.co.schranz" /> <!-- This is needed for the autowired -->
+  
+  <bean id="propertyPlaceholderConfigurer"   
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>/WEB-INF/${machine}_machine.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+  <bean id="defaultDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+	    <property name="url" value="${jdbc.url}"></property>  
+	    <property name="username" value="${jdbc.username}"></property>  
+	    <property name="password" value="${jdbc.password}"></property>
+  </bean>
+  
+  <bean id="datasourceWrapper" class="at.generalsolutions.datasource.DataSourceWrapper" destroy-method="close">
+		<property name="defaultDataSource" value="defaultDataSource"/>
+		<property name="dataSources">
+			<map>
+				<entry key="default">
+					<ref bean="defaultDataSource"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="defaultConfig" class="at.generalsolutions.config.ProductInformation">
+		<property name="database" value="default" />
+		<property name="productName" value="taskmanagement" />
+	</bean>
+	
+	<bean id="configList" class="at.generalsolutions.config.ProductHostConfigurationList">
+		<property name="defaultConfiguration" ref="defaultConfig" />
+		<property name="tryToFindOtherThenDefault" value="true"/>
+		<property name="configurations">
+			<map>
+				<entry key="192.168.0.94,localhost" value-ref="defaultConfig" />
+			</map>
+		</property>
+	</bean>
+  
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+      <property name="dataSource" ref="datasourceWrapper" />
+      <property name="configLocation" value="classpath:hibernate.cfg.xml" />
+      <property name="hibernateProperties">
+          <props>
+              <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+          </props>
+      </property>
+  </bean>
+
+  <!-- <tx:annotation-driven /> -->
+  <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+      <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
+  <!-- define here your beans -->
+  <bean id="txProxyTemplate" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager"/>
+		</property>
+		<property name="transactionAttributes">
+		       <props>
+		        <prop key="update*">PROPAGATION_REQUIRED</prop>
+		        <prop key="save*">PROPAGATION_REQUIRED</prop>
+		        <prop key="insert*">PROPAGATION_REQUIRED</prop>
+		        <prop key="delete*">PROPAGATION_REQUIRED</prop>
+		        <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+		      </props>
+		</property>
+	</bean>
+	
+ 	<bean id="systemPaths" class="at.generalsolutions.config.SystemPaths">
+		<property name="systemRoot" value="${systemPaths.systemRoot}"></property>
+	</bean>
+	
+ 	<bean id="emailConfiguration" class="at.generalsolutions.mail.pojo.EmailConfiguration">
+        <property name="username" value="${emailConfiguration.username}" />
+        <property name="password" value="${emailConfiguration.password}" />
+        <property name="host" value="${emailConfiguration.host}"></property>
+    </bean>
+    
+	<bean id="errorConfig" class="at.generalsolutions.stripes.ErrorConfiguration">
+       <property name="receiver" value="error@contwise.com" />
+       <property name="sender" value="${errorConfig.sender}" />
+       <property name="emailSubject" value="${errorConfig.emailSubject}" />
+       <property name="sendEmail" value="${errorConfig.sendEmail}" />
+       <property name="emailConfig" ref="emailConfiguration" />
+     </bean>
+	
+	<!-- start of DAO definitions -->
+	
+	<bean id="historyItemDao" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="at.generalsolutions.history.model.dao.hibernate.HistoryItemDaoImpl">
+				<constructor-arg>
+					<ref bean="sessionFactory" />
+				</constructor-arg>
+			</bean>
+	    </property>
+	    <property name="proxyInterfaces">
+				<value>at.generalsolutions.history.model.dao.HistoryItemDao</value>
+		</property>
+	</bean>
+	
+	<bean id="disciplineDao" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="at.co.schranz.tlsb.discipline.model.dao.hibernate.DisciplineDaoImpl">
+				<constructor-arg>
+					<ref bean="sessionFactory" />
+				</constructor-arg>
+			</bean>
+	    </property>
+	    <property name="proxyInterfaces">
+				<value>at.co.schranz.tlsb.discipline.model.dao.DisciplineDao</value>
+		</property>
+	</bean>
+	
+	<bean id="roundDao" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="at.co.schranz.tlsb.round.model.dao.hibernate.RoundDaoImpl">
+				<constructor-arg>
+					<ref bean="sessionFactory" />
+				</constructor-arg>
+			</bean>
+	    </property>
+	    <property name="proxyInterfaces">
+				<value>at.co.schranz.tlsb.round.model.dao.RoundDao</value>
+		</property>
+	</bean>
+	
+	<bean id="shooterDao" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="at.co.schranz.tlsb.shooter.model.dao.hibernate.ShooterDaoImpl">
+				<constructor-arg>
+					<ref bean="sessionFactory" />
+				</constructor-arg>
+			</bean>
+	    </property>
+	    <property name="proxyInterfaces">
+				<value>at.co.schranz.tlsb.shooter.model.dao.ShooterDao</value>
+		</property>
+	</bean>
+	
+	<!-- end of DAO definitions -->
+	
+	<!-- start of SERVICE definitions -->
+	
+	<bean name="fileService" id="fileServiceId" class="at.generalsolutions.filehandle.local.LocalFileService" init-method="init"/>
+	
+	
+	<bean name="ftpImporter" id="ftpImporter" class="at.co.schranz.tlsb.shooter.ftpimport.FTPImporter">
+		<property name="hostname" value="${ftp.hostname}"/>
+		<property name="username" value="${ftp.username}"/>
+		<property name="password" value="${ftp.password}"/>
+		<property name="pathname" value="${ftp.pathname}"/>
+	</bean>
+	
+	<!-- end of SERVICE definitions -->
+	
+	<!-- start of other definitions -->
+	
+	<bean name="documentUtils" id="documentUtilsId" class="at.generalsolutions.document.DocumentUtils">
+		<property name="systemPaths" ref="systemPaths"></property>
+		<property name="fileService" ref="fileService"></property>
+	</bean>
+	
+	<bean id="messageServer" class="at.generalsolutions.messaging.MessageServerImpl">
+		<property name="receivers">
+			<list>
+				<ref bean="historyService"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- end of other definitions -->
+	
+</beans>

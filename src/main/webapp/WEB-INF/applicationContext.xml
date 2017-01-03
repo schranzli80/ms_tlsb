@@ -27,7 +27,7 @@
   </bean>
   
   <bean id="datasourceWrapper" class="at.generalsolutions.datasource.DataSourceWrapper" destroy-method="close">
-		<property name="defaultDataSource" value="defaultDataSource"/>
+		<property name="defaultDataSource" value="default"/>
 		<property name="dataSources">
 			<map>
 				<entry key="default">

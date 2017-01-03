@@ -118,7 +118,7 @@ public class ReportBean extends BaseActionBean {
 		String image = discipline.getPicturePrint();
 		
 		params.put("image", image);
-		JasperPrint jasperPrint = sr.print("/ezwtotal.jrxml", params , defaultDataSource.getConnection());
+		JasperPrint jasperPrint = sr.print("/reports/ezwtotal.jrxml", params , defaultDataSource.getConnection());
 		return generateAsStream(jasperPrint);
 	}
 	

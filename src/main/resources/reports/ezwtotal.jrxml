@@ -110,7 +110,7 @@ $P!{order}]]>
 				<reportElement x="385" y="0" width="120" height="61" uuid="33cc82f1-a1c9-4704-806f-1496f52fad2e">
 					<printWhenExpression><![CDATA[$P{image} != null]]></printWhenExpression>
 				</reportElement>
-				<imageExpression><![CDATA[$P{image}]]></imageExpression>
+				<imageExpression><![CDATA["\\"+$P{image}]]></imageExpression>
 			</image>
 			<image hAlign="Right" isUsingCache="false" onErrorType="Blank">
 				<reportElement x="505" y="0" width="50" height="61" uuid="fbcaa5e4-40f9-4e57-9fdf-fb4ac0d73769">

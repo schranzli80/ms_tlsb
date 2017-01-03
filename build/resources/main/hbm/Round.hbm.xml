@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="at.co.schranz.tlsb.round.model.Round" table="tlsb_round">
+		<id name="id" type="java.lang.Integer" unsaved-value="-1">
+		    <column name="round_id" />
+		    <generator class="native"/>
+		</id>
+		
+		<property name="round" type="java.lang.Integer" column="round"/>
+		<property name="start" type="java.util.Date" column="start"/>
+		<property name="stop" type="java.util.Date" column="stop"/>
+		<property name="dizipline" type="java.lang.Integer" column="discipline"/>		
+		<property name="active" type="java.lang.Boolean" column="active"/>
+		<property name="distirct" type="string" column="district"/>
+		<property name="useHobby" type="java.lang.Boolean" column="use_hobby"/>
+	</class>
+</hibernate-mapping>

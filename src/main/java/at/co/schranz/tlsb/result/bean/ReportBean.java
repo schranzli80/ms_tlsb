@@ -123,7 +123,7 @@ public class ReportBean extends BaseActionBean {
 	}
 	
 	
-	public Resolution generateAsStream(JasperPrint jasperPrint) {
+	public Resolution generateAsStream(final JasperPrint jasperPrint) {
     	return new StreamingResolution("application/pdf") {
 			
 		    public void stream(HttpServletResponse response) throws Exception {
